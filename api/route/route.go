@@ -2,6 +2,7 @@ package route
 
 import (
 	"net/http"
+	"sof/api/controller"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -25,5 +26,7 @@ func NewMiddlewareHandler(r *httprouter.Router) http.Handler {
 func InitRoutes() *httprouter.Router {
     r := httprouter.New()
 
+    r.POST("/v1/user/created", controller.CreatedUserController)
     return r
 }
+
