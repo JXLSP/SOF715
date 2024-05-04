@@ -16,6 +16,10 @@ type UserControllers struct {
     b services.Serviceser
 }
 
+func NewUserController() *UserControllers {
+    return &UserControllers{}
+}
+
 func (ctrl *UserControllers) CreatedUserController(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     res, _ := io.ReadAll(r.Body)
 
