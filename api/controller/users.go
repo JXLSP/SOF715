@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"sof/internal/services"
 	"sof/pkg/db"
 	"sof/pkg/meta"
 	"sof/pkg/response"
@@ -11,7 +12,11 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func CreatedUserController(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+type UserControllers struct {
+    b services.Serviceser
+}
+
+func (ctrl *UserControllers) CreatedUserController(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     res, _ := io.ReadAll(r.Body)
 
     request := &meta.CreatedUserRequest{}
@@ -22,14 +27,8 @@ func CreatedUserController(w http.ResponseWriter, r *http.Request, _ httprouter.
         return
     }
 
-    if _, err := db.GetUserByName(request.UserName); err != nil {
-        rs := response.BaseResponse{Code: 400, Message: "用户已经存在", Data: []string{}}
-        response.WriteResponse(w, rs)
-        return
-    }
-
-    if err := db.CreatedUser(request); err != nil {
-        rs := response.BaseResponse{Code: 500, Message: "用户创建失败", Data: []string{}}
+    if err := ctrl.b.Users().CreatedUser(r.Context(), request); err != nil {}
+        rs := response.BaseResponse{Code: 500, Message: err.Error(), Data: []string{}}
         response.WriteResponse(w, rs)
         return
     }

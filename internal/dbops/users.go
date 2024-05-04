@@ -16,6 +16,10 @@ type users struct {
     db *sql.DB
 }
 
+func newUserOps(db *sql.DB) *users {
+    return &users{db: db}
+}
+
 func (us *users) CreatedUser(ctx context.Context, request *meta.CreatedUserRequest) error {
     sql, err := us.db.Prepare(`INSERT INTO users (username, password, nickname) VALUES(?, ?, ?)`)
     if err != nil {
