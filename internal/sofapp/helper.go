@@ -1,24 +1,30 @@
 package sofapp
 
 import (
-	"database/sql"
-	"sync"
+	"sof/internal/dbops"
+	"sof/pkg/db"
+	"time"
 )
 
-var (
-    DBS *database
-    once sync.Once
-)
 
-type database struct {
-    db *sql.DB
-}
+func initDBStore() error {
+    opts := &db.MysqlOptions{
+        HostName: "localhost",
+        Username: "root",
+        Password: "123456",
+        Database: "sof_db",
+        MaxIdleConnections: 10,
+        MaxOpenConnections: 5,
+        MaxConnectionLifeTime: 10 * time.Second,
+    }
 
-func NewDBStore(db *sql.DB) *database {
-    once.Do(func() {
-        DBS = &database{db: db}
-    })
+    instance, err := db.NewDBConnection(opts)
+    if err != nil {
+        return err
+    }
 
-    return DBS
+    _ = dbops.NewDBStore(instance)
+
+    return nil
 }
 

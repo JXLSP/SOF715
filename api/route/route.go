@@ -51,6 +51,7 @@ func (m *middleware) RecoverHandler(next http.Handler) http.Handler {
 func InitRoutes() *httprouter.Router {
     r := httprouter.New()
 
+
     r.POST("/v1/user/created", controller.CreatedUserController)
     return r
 }
